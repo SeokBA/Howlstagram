@@ -1,9 +1,15 @@
 package com.seokba.howlstagram
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.seokba.howlstagram.navigation.AddPhotoActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
@@ -24,6 +30,13 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             }
 
             R.id.action_add_photo -> {
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    startActivity(Intent(this, AddPhotoActivity::class.java))
+                }
                 return true
             }
 
@@ -49,5 +62,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         bottom_navigation.setOnNavigationItemSelectedListener(this)
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+            1
+        )
     }
 }
