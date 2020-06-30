@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.seokba.howlstagram.R
 import com.seokba.howlstagram.navigation.model.AlarmDTO
 import com.seokba.howlstagram.navigation.model.ContentDTO
+import com.seokba.howlstagram.navigation.util.FcmPush
 import kotlinx.android.synthetic.main.activity_comment.*
 import kotlinx.android.synthetic.main.item_comment.view.*
 
@@ -53,6 +54,9 @@ class CommentActivity : AppCompatActivity() {
         alarmDTO.timestamp = System.currentTimeMillis()
         alarmDTO.message = message
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+        var msg = FirebaseAuth.getInstance().currentUser?.email + " " +getString(R.string.alarm_comment) + " of " + message
+        FcmPush.instance.sendMessage(destinationUid, "Howlstagram", msg)
     }
 
     inner class CommentRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

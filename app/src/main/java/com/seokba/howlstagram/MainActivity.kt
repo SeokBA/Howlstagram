@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.core.app.ActivityCompat
@@ -18,6 +19,7 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.seokba.howlstagram.navigation.AddPhotoActivity
+import com.seokba.howlstagram.navigation.util.FcmPush
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
@@ -82,7 +84,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             val token = task.result?.token
             val uid = FirebaseAuth.getInstance().currentUser?.uid
             val map = mutableMapOf<String, Any>()
-            map["pushToken"] = token!!
+            map["pushtoken"] = token!!
 
             FirebaseFirestore.getInstance().collection("pushtokens").document(uid!!).set(map)
         }
@@ -102,6 +104,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         bottom_navigation.selectedItemId = R.id.action_home
         registerPushToken()
     }
+
+//    override fun onStop() {
+//        super.onStop()
+//        FcmPush.instance.sendMessage("LiTjKzOnzpSZzwmGVQeE7Sz5inp2", "hi", "bye")
+//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

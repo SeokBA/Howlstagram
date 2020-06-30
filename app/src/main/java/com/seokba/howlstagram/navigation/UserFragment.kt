@@ -21,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.seokba.howlstagram.navigation.model.AlarmDTO
 import com.seokba.howlstagram.navigation.model.ContentDTO
 import com.seokba.howlstagram.navigation.model.FollowDTO
+import com.seokba.howlstagram.navigation.util.FcmPush
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_user.view.*
 
@@ -173,6 +174,9 @@ class UserFragment : Fragment() {
         alarmDTO.kind = 2
         alarmDTO.timestamp = System.currentTimeMillis()
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+        var message = FirebaseAuth.getInstance().currentUser?.email + getString(R.string.alarm_follow)
+        FcmPush.instance.sendMessage(destinationUid, "Howlstagram", message)
     }
 
     fun getProfileImage() {
