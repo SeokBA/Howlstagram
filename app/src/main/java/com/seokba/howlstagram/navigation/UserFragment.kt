@@ -18,6 +18,7 @@ import com.bumptech.glide.request.Request
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.seokba.howlstagram.navigation.model.AlarmDTO
 import com.seokba.howlstagram.navigation.model.ContentDTO
 import com.seokba.howlstagram.navigation.model.FollowDTO
 import kotlinx.android.synthetic.main.activity_main.*
@@ -157,10 +158,21 @@ class UserFragment : Fragment() {
                 //It add my follower when I don't follow a third person
                 followDTO!!.followerCount = followDTO!!.followerCount + 1
                 followDTO!!.followers[currentUserUid!!] = true
+                followerAlarm(uid!!)
             }
             transaction.set(tsDocFollower, followDTO!!)
             return@runTransaction
         }
+    }
+
+    fun followerAlarm(destinationUid: String){
+        var alarmDTO = AlarmDTO()
+        alarmDTO.destinationUid = destinationUid
+        alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
+        alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
+        alarmDTO.kind = 2
+        alarmDTO.timestamp = System.currentTimeMillis()
+        FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
     }
 
     fun getProfileImage() {
